@@ -10,11 +10,14 @@
   "dependencies": {
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
+    "lodash": "^4.17.21",
+    "socket.io-client": "^4.3.2",
     "sweetalert2": "^11.1.9",
     "vue": "^2.6.11",
     "vue-router": "^3.5.3"
   },
   "devDependencies": {
+    "@types/socket.io-client": "^3.0.0",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",

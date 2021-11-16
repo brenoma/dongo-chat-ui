@@ -2,7 +2,7 @@
   <div class="login-panel">
     <span class="material-icons md-24">Dongo-Chat</span>
     <p class="login-title">Faça seu Login</p>
-    <div id="Logininfo" class="login-info">
+    <div @keydown.enter="loginIn()" id="Logininfo" class="login-info">
       <input placeholder="E-mail" label="EMAIL" class="input" v-model="email" />
 
       <input
@@ -32,7 +32,7 @@
 import Swal from "sweetalert2";
 import cfg from '../../../../configs/configs.json'
 import axios from "axios";
-
+import _ from 'lodash'
 export default {
   name: "LoginPanel",
   props: {
@@ -48,7 +48,7 @@ export default {
         toast: true,
         position: "top-end",
         showConfirmButton: false,
-        timer: 3000,
+        timer: 2000,
         timerProgressBar: true,
       }),
     };
@@ -57,7 +57,8 @@ export default {
     handleComponent: function () {
       this.$emit("handleComponent", false);
     },
-    loginIn() {
+
+    loginIn: _.throttle(function() {
       axios
         .post(cfg.baseUrl + "users/login", {
           username: this.email,
@@ -65,14 +66,15 @@ export default {
         })
         .then((response) => {
           this.makeToast("success", response.data.message);
-          localStorage.setItem("token", response.data.token);
-          console.log("Token: " + localStorage.token);
+          localStorage.setItem("token", response.data.token)
+          localStorage.setItem( "username", response.data.user);
           this.$router.push({ path: "/dashboard" });
         })
         .catch((err) => {
           this.makeToast("error", err.response.data.message);
         });
-    },
+    }, 2000),
+
     makeToast(type, msg) {
       this.Toast.fire({
         icon: type,
@@ -83,7 +85,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .material-icons.md-24 {
   position: relative;
   margin-top: 20px;
@@ -102,7 +104,7 @@ export default {
   top: calc(50% - 18em);
   text-indent: 2em;
   border-radius: 8px;
-  animation: animate 2s linear forwards;
+  animation: animate 0.5s linear forwards;
 
   @media screen and (max-width: 768px) {
     width: 80%;
@@ -136,7 +138,7 @@ export default {
   height: 2rem;
   overflow: visible;
   margin-bottom: 15px;
-  transition: 0.5s;
+  transition: 0.3s;
   border: hidden;
   border-block-end-style: inset;
   border-color: #1976d2;
@@ -150,7 +152,12 @@ export default {
   padding: 2em;
 }
 
+.login-submit {
+
+}
+
 .signuplink {
+  cursor: pointer;
   margin-right: 10px;
   color: #1976d2;
 }

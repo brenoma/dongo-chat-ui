@@ -57,8 +57,8 @@ export default {
     },
   },
   methods: {
-    signUp() {
-      axios
+    async signUp() {
+      await axios
         .post(cfg.baseUrl + "users/create", {
           name: this.name,
           email: this.email,
@@ -66,12 +66,10 @@ export default {
           role: 'user'
         })
         .then((response) => {
-          this.makeToast("success", response.data.message);
-          console.log(response.data.message);
+          this.makeToast("success", `Usuário Cadastrado com sucesso: ${response.data.email}`);
         })
-        .catch((err) => {
-          this.makeToast("error", err.response.data.message);
-          console.log(err.response.data.message);
+        .catch(() => {
+          this.makeToast("error", `Não foi possível cadastrar usuário, tente novamente`);
         });
     },
     makeToast(type, msg) {
@@ -87,4 +85,8 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style scoped>
+  .signuplink { 
+    cursor: pointer;
+  }
+</style>
