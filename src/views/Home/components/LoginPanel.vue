@@ -90,8 +90,8 @@ export default {
   position: relative;
   margin-top: 20px;
   text-align: left;
-  font-size: 24px;
-  color: #1976d2;
+  font-size: 2px;
+  color: #ffffff;
 }
 
 .login-panel {
@@ -105,7 +105,6 @@ export default {
   text-indent: 2em;
   border-radius: 8px;
   animation: animate 0.5s linear forwards;
-
   @media screen and (max-width: 768px) {
     width: 80%;
   }
@@ -138,7 +137,7 @@ export default {
   height: 2rem;
   overflow: visible;
   margin-bottom: 15px;
-  transition: 0.3s;
+  transition: 0.5s;
   border: hidden;
   border-block-end-style: inset;
   border-color: #1976d2;
@@ -152,14 +151,13 @@ export default {
   padding: 2em;
 }
 
-.login-submit {
-
-}
-
 .signuplink {
-  cursor: pointer;
   margin-right: 10px;
   color: #1976d2;
+}
+
+.sender {
+  font-weight: 600;
 }
 
 button.button-login {

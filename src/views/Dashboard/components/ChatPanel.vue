@@ -1,12 +1,24 @@
 <template>
   <div class="login-panel">
-    <span class="material-icons md-24">Bem vindo, {{username}}</span>
+    <span class="material-icons md-24">{{ username }}</span>
     <div class="chat-card">
       <div class="message" v-for="message in messages" :key="message.id">
-        <div><b>{{message.user}} disse:</b> {{message.content}}</div>
+        <div v-if="message.user === username" class="message-bubble">
+          <strong class="sender">{{ message.user }} disse:</strong> {{ message.content }}
+          <!-- <p class="date-time">we</p> -->
+        </div>
+        <div v-else class="message-bubble-recive">
+          <strong class="sender">{{ message.user }} disses:</strong> {{ message.content }}
+          <!-- <p class="date-time">we</p> -->
+        </div>
       </div>
     </div>
-    <input v-model="text" placeholder="Digite sua mensagem e aperte enter" type="text" v-on:keyup.enter="sendMessage"/>
+    <input
+      v-model="text"
+      placeholder="Digite sua mensagem e aperte enter"
+      type="text"
+      v-on:keyup.enter="sendMessage"
+    />
   </div>
 </template>
 
@@ -28,9 +40,9 @@ export default {
   data() {
     return {
       connection: null,
-      username: localStorage.getItem('username'),
+      username: localStorage.getItem("username"),
       messages: [],
-      text: '', 
+      text: "",
       Toast: Swal.mixin({
         toast: true,
         position: "top-end",
@@ -45,24 +57,22 @@ export default {
       this.$emit("handleComponent", false);
     },
     sendMessage() {
-      this.text = this.text.trim()
-      if(this.text === '') {
-        return
+      this.text = this.text.trim();
+      if (this.text === "") {
+        return;
       }
-      this.addMessage()
-      SocketioService.socket.emit('msgToServer', this.text)
-      this.text = ''
+      this.addMessage();
+
+      this.text = "";
     },
 
     addMessage() {
       const message = {
         id: new Date().getTime(),
         content: this.text,
-        user: localStorage.getItem('username'),
-      }
-
-      this.messages = this.messages.concat(message)
-      // this.text = '';
+        user: localStorage.getItem("username"),
+      };
+      SocketioService.socket.emit("msgToServer", message);
     },
     makeToast(type, msg) {
       this.Toast.fire({
@@ -73,6 +83,9 @@ export default {
   },
   created() {
     SocketioService.setupSocketConnection();
+    SocketioService.socket.on("msgToServer", (data) => {
+      this.messages.push(data)
+    });
   },
   beforeUnmount() {
     SocketioService.disconnect();
@@ -80,9 +93,26 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .message {
+  color: #000000;
   display: flex;
+  font-size: 14px;
+}
+
+.message-bubble {
+  background-color: #78e08f;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 10px;
+}
+
+.message-bubble-recive {
+  /* right: 1rem; */
+  background-color: #82ccdd;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 10px;
 }
 
 .chat-card {
@@ -92,10 +122,12 @@ export default {
 
 .material-icons.md-24 {
   position: relative;
-  margin-top: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   text-align: left;
-  font-size: 24px;
-  color: #1976d2;
+  font-size: 20px;
+  color: #ffffff;
+  background: #1976d2;
 }
 
 .login-panel {
@@ -109,7 +141,7 @@ export default {
   text-indent: 2em;
   border-radius: 8px;
   animation: animate 0.5s linear forwards;
-
+  background-color: rgba(0,0,0,0.4) !important;
   @media screen and (max-width: 768px) {
     width: 80%;
   }
@@ -150,28 +182,14 @@ export default {
 }
 
 .login-panel .login-info .input:focus {
-  transform: scale(1.05);
+  /* transform: scale(1.05); */
 }
 .login-panel .login-submit {
   padding: 2em;
 }
 
-.signuplink {
-  margin-right: 10px;
-  color: #1976d2;
-}
-
-button.button-login {
-  width: 70px;
-  border-radius: 10px;
-  background: #1976d2;
-  color: #ffffff;
-  transition: 0.1s ease-in-out;
-}
-
-button:hover {
-  transform: scale(1.2);
-  opacity: 0.8;
+.sender {
+  font-weight: 600;
 }
 
 @keyframes animate {
