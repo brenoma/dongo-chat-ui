@@ -101,6 +101,9 @@ export default {
 }
 
 .message-bubble {
+  margin-left: auto;
+  word-break: break-all;
+  max-width: 70%;
   background-color: #78e08f;
   padding: 0.75rem;
   margin-bottom: 0.75rem;
@@ -108,6 +111,8 @@ export default {
 }
 
 .message-bubble-recive {
+  word-break: break-all;
+  max-width: 70%;
   /* right: 1rem; */
   background-color: #82ccdd;
   padding: 0.75rem;
@@ -116,6 +121,7 @@ export default {
 }
 
 .chat-card {
+  overflow: auto;
   margin: 1rem;
   height: 60vh;
 }
