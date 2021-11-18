@@ -2,27 +2,33 @@
   <div class="login-panel">
     <span class="material-icons md-24">{{ username }}</span>
     <div class="chat-card" data-scroll-el>
-      <div class="message" v-for="message in messages" :key="message.id">
-        <div v-if="message.user === username" class="message-bubble">
-          <strong class="sender">{{ message.user }}:</strong> {{ message.content }}
-          <!-- <p class="date-time">we</p> -->
-        </div>
-        <div v-else class="message-bubble-recive">
-          <strong class="sender">{{ message.user }}:</strong> {{ message.content }}
-          <!-- <p class="date-time">we</p> -->
+      <div data-scrolling style="overflow: hidden; overflow-y: auto">
+        <div class="message" v-for="message in messages" :key="message.id">
+          <div v-if="message.user === username" class="message-bubble">
+            <strong class="sender">{{ message.user }}:</strong>
+            {{ message.content }}
+            <!-- <p class="date-time">we</p> -->
+          </div>
+          <div v-else class="message-bubble-recive">
+            <strong class="sender">{{ message.user }}:</strong>
+            {{ message.content }}
+            <!-- <p class="date-time">we</p> -->
+          </div>
         </div>
       </div>
     </div>
     <div class="card-footer">
       <div class="input-group">
         <input
-        class="form-control type_msg"
-        v-model="text"
-        placeholder="Digite sua mensagem e aperte enter"
-        type="text"
-        v-on:keyup.enter="sendMessage"
+          class="form-control type_msg"
+          v-model="text"
+          placeholder="Digite sua mensagem e aperte enter"
+          type="text"
+          v-on:keyup.enter="sendMessage"
         />
-        <div class="input-group-text send_btn"><i class="fas fa-location-arrow" v-on:click="sendMessage"></i></div>
+        <div class="input-group-text send_btn">
+          <i class="fas fa-location-arrow" v-on:click="sendMessage"></i>
+        </div>
       </div>
     </div>
   </div>
@@ -78,6 +84,8 @@ export default {
         content: this.text,
         user: localStorage.getItem("username"),
       };
+      // scrolling.scrollTop = scrolling.scrollHeight;
+      // console.log(scrolling);
       SocketioService.socket.emit("msgToServer", message);
     },
     makeToast(type, msg) {
@@ -86,13 +94,21 @@ export default {
         title: msg,
       });
     },
+
+    scrollToEnd() {
+      const el = document.querySelector("[data-scroll-el]");
+      const scrolling = document.querySelector("[data-scrolling]");
+      el.scroll({
+        top: scrolling.scrollHeight * 2,
+        behavior: "smooth",
+      });
+    },
   },
   created() {
     SocketioService.setupSocketConnection();
     SocketioService.socket.on("msgToServer", (data) => {
-      this.messages.push(data)
-      console.log(data)
-      // document.querySelector("[data-scroll-el]").scrollTo({top: document.body.height, behavior: 'smooth'})
+      this.messages.push(data);
+      this.$nextTick(() => this.scrollToEnd());
     });
   },
   beforeUnmount() {
@@ -146,7 +162,7 @@ export default {
   text-align: left;
   font-size: 20px;
   color: #ffffff;
-  background-color: rgba(0,0,0,0.4) !important
+  background-color: rgba(0, 0, 0, 0.4) !important;
 }
 
 .login-panel {
@@ -156,7 +172,7 @@ export default {
   margin: 0rem auto;
   border-radius: 0 0 15px 15px !important;
   animation: animate 0.5s linear forwards;
-  background-color: rgba(0,0,0,0.4) !important;
+  background-color: rgba(0, 0, 0, 0.4) !important;
   @media screen and (max-width: 768px) {
     width: 80%;
   }
@@ -167,13 +183,13 @@ export default {
 }
 
 .card-footer {
-	border-radius: 0 0 15px 15px !important;
-	border-top: 0 !important;
+  border-radius: 0 0 15px 15px !important;
+  border-top: 0 !important;
 }
 
 .input-group {
-	border-radius: 0 0 15px 15px !important;
-	border-top: 0 !important;
+  border-radius: 0 0 15px 15px !important;
+  border-top: 0 !important;
   height: 100%;
   width: 100%;
   display: flex;
@@ -183,7 +199,7 @@ export default {
 .type_msg {
   padding-left: 1rem;
   width: 100%;
-  background-color: rgba(0,0,0,0.3) !important;
+  background-color: rgba(0, 0, 0, 0.3) !important;
   border: 0 !important;
   color: white !important;
   height: 60px !important;
@@ -192,8 +208,8 @@ export default {
 }
 
 .type_msg:focus {
-  box-shadow:none !important;
-  outline:0px !important;
+  box-shadow: none !important;
+  outline: 0px !important;
 }
 
 .send_btn {
@@ -203,10 +219,10 @@ export default {
   align-items: center;
   height: 3.85rem;
   display: flex;
-	border-radius: 0 15px 15px 0 !important;
+  border-radius: 0 15px 15px 0 !important;
   border-top: 0 !important;
-	background-color: rgba(0,0,0,0.3) !important;
-  border:0 !important;
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  border: 0 !important;
   color: white !important;
   cursor: pointer;
 }
@@ -218,17 +234,17 @@ export default {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
 }
 
 @keyframes animate {
