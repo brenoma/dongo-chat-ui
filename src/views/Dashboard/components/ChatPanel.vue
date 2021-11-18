@@ -1,7 +1,7 @@
 <template>
   <div class="login-panel">
     <span class="material-icons md-24">{{ username }}</span>
-    <div class="chat-card">
+    <div class="chat-card" data-scroll-el>
       <div class="message" v-for="message in messages" :key="message.id">
         <div v-if="message.user === username" class="message-bubble">
           <strong class="sender">{{ message.user }}:</strong> {{ message.content }}
@@ -91,6 +91,8 @@ export default {
     SocketioService.setupSocketConnection();
     SocketioService.socket.on("msgToServer", (data) => {
       this.messages.push(data)
+      console.log(data)
+      // document.querySelector("[data-scroll-el]").scrollTo({top: document.body.height, behavior: 'smooth'})
     });
   },
   beforeUnmount() {
@@ -107,6 +109,7 @@ export default {
 }
 
 .message-bubble {
+  margin-right: 1rem;
   margin-left: auto;
   word-break: break-all;
   max-width: 70%;
@@ -132,6 +135,8 @@ export default {
 }
 
 .material-icons.md-24 {
+  display: flex;
+  justify-content: center;
   height: 5vh;
   display: flex;
   align-items: center;
@@ -148,11 +153,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 50%;
-  margin: 0em auto;
-  position: relative;
-  background-color: #ffffff;
-  top: calc(50% - 18em);
-  text-indent: 2em;
+  margin: 0rem auto;
   border-radius: 0 0 15px 15px !important;
   animation: animate 0.5s linear forwards;
   background-color: rgba(0,0,0,0.4) !important;
@@ -186,7 +187,6 @@ export default {
   border: 0 !important;
   color: white !important;
   height: 60px !important;
-  overflow-y: auto;
   border-top: 0 !important;
   border-radius: 0 0 0 15px !important;
 }
@@ -209,6 +209,26 @@ export default {
   border:0 !important;
   color: white !important;
   cursor: pointer;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }
 
 @keyframes animate {

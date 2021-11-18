@@ -24,4 +24,9 @@ export default {
 };
 </script>
 
-<style scoped />
+<style scoped >
+#content {
+  display: flex;
+  align-items: center;
+}
+</style>

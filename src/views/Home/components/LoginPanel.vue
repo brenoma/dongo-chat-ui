@@ -65,9 +65,10 @@ export default {
           password: this.password,
         })
         .then((response) => {
-          this.makeToast("success", response.data.message);
+          this.makeToast("success", `Bem vindo, ${response.data.user}`);
           localStorage.setItem("token", response.data.token)
           localStorage.setItem( "username", response.data.user);
+          localStorage.setItem("userId", response.data.id)
           this.$router.push({ path: "/dashboard" });
         })
         .catch((err) => {
