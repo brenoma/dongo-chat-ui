@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+
+  app_ui:
+    build: .
+    container_name: dongo-chat
+    entrypoint: ./.docker/entrypoint.sh
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/home/node/app
+    tty: true

@@ -4,21 +4,27 @@
     <div class="chat-card">
       <div class="message" v-for="message in messages" :key="message.id">
         <div v-if="message.user === username" class="message-bubble">
-          <strong class="sender">{{ message.user }} disse:</strong> {{ message.content }}
+          <strong class="sender">{{ message.user }}:</strong> {{ message.content }}
           <!-- <p class="date-time">we</p> -->
         </div>
         <div v-else class="message-bubble-recive">
-          <strong class="sender">{{ message.user }} disses:</strong> {{ message.content }}
+          <strong class="sender">{{ message.user }}:</strong> {{ message.content }}
           <!-- <p class="date-time">we</p> -->
         </div>
       </div>
     </div>
-    <input
-      v-model="text"
-      placeholder="Digite sua mensagem e aperte enter"
-      type="text"
-      v-on:keyup.enter="sendMessage"
-    />
+    <div class="card-footer">
+      <div class="input-group">
+        <input
+        class="form-control type_msg"
+        v-model="text"
+        placeholder="Digite sua mensagem e aperte enter"
+        type="text"
+        v-on:keyup.enter="sendMessage"
+        />
+        <div class="input-group-text send_btn"><i class="fas fa-location-arrow" v-on:click="sendMessage"></i></div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -107,17 +113,16 @@ export default {
   background-color: #78e08f;
   padding: 0.75rem;
   margin-bottom: 0.75rem;
-  border-radius: 10px;
+  border-radius: 150px 150px 0 150px !important;
 }
 
 .message-bubble-recive {
   word-break: break-all;
   max-width: 70%;
-  /* right: 1rem; */
   background-color: #82ccdd;
   padding: 0.75rem;
   margin-bottom: 0.75rem;
-  border-radius: 10px;
+  border-radius: 150px 150px 150px 0 !important;
 }
 
 .chat-card {
@@ -127,13 +132,16 @@ export default {
 }
 
 .material-icons.md-24 {
+  height: 5vh;
+  display: flex;
+  align-items: center;
   position: relative;
   padding-top: 10px;
   padding-bottom: 10px;
   text-align: left;
   font-size: 20px;
   color: #ffffff;
-  background: #1976d2;
+  background-color: rgba(0,0,0,0.4) !important
 }
 
 .login-panel {
@@ -145,7 +153,7 @@ export default {
   background-color: #ffffff;
   top: calc(50% - 18em);
   text-indent: 2em;
-  border-radius: 8px;
+  border-radius: 0 0 15px 15px !important;
   animation: animate 0.5s linear forwards;
   background-color: rgba(0,0,0,0.4) !important;
   @media screen and (max-width: 768px) {
@@ -153,49 +161,54 @@ export default {
   }
 }
 
-.login-panel .login-title {
-  display: flex;
-  justify-content: left;
-  width: 100%;
-  padding-top: 1.5em;
-  font-size: 2em;
-  line-height: 3em;
-  color: #ffffff;
-  background-color: #1976d2;
-
-  @media screen and (max-width: 768px) {
-    font-size: 1.5em;
-  }
-}
-
-.login-panel .login-info {
-  padding: 2em 2em 0 2em;
-  text-indent: 0em;
-}
-
-.login-panel .login-info .input {
-  display: flex;
-  position: relative;
-  width: 50%;
-  height: 2rem;
-  overflow: visible;
-  margin-bottom: 15px;
-  transition: 0.5s;
-  border: hidden;
-  border-block-end-style: inset;
-  border-color: #1976d2;
-  outline: none;
-}
-
-.login-panel .login-info .input:focus {
-  /* transform: scale(1.05); */
-}
-.login-panel .login-submit {
-  padding: 2em;
-}
-
 .sender {
   font-weight: 600;
+}
+
+.card-footer {
+	border-radius: 0 0 15px 15px !important;
+	border-top: 0 !important;
+}
+
+.input-group {
+	border-radius: 0 0 15px 15px !important;
+	border-top: 0 !important;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.type_msg {
+  padding-left: 1rem;
+  width: 100%;
+  background-color: rgba(0,0,0,0.3) !important;
+  border: 0 !important;
+  color: white !important;
+  height: 60px !important;
+  overflow-y: auto;
+  border-top: 0 !important;
+  border-radius: 0 0 0 15px !important;
+}
+
+.type_msg:focus {
+  box-shadow:none !important;
+  outline:0px !important;
+}
+
+.send_btn {
+  width: 5vw;
+  padding-right: 10px;
+  justify-content: center;
+  align-items: center;
+  height: 3.85rem;
+  display: flex;
+	border-radius: 0 15px 15px 0 !important;
+  border-top: 0 !important;
+	background-color: rgba(0,0,0,0.3) !important;
+  border:0 !important;
+  color: white !important;
+  cursor: pointer;
 }
 
 @keyframes animate {
