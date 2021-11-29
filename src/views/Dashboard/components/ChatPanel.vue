@@ -1,6 +1,10 @@
 <template>
   <div class="login-panel">
-    <span class="material-icons md-24">{{ username }}</span>
+    <div class="material-icons md-24">
+      <span>{{ username }}</span>
+      <i class="fas fa-times-circle" v-on:click="handleLogout()"></i>
+    </div>
+
     <div class="chat-card" data-scroll-el>
       <div data-scrolling style="overflow: hidden; overflow-y: auto">
         <div class="message" v-for="message in messages" :key="message.id">
@@ -27,7 +31,7 @@
           v-on:keyup.enter="sendMessage"
         />
         <div class="input-group-text send_btn">
-          <i class="fas fa-location-arrow" v-on:click="sendMessage"></i>
+          <i class="fas fa-location-arrow" v-on:click="sendMessage()"></i>
         </div>
       </div>
     </div>
@@ -37,10 +41,6 @@
 <script>
 import Swal from "sweetalert2";
 import SocketioService from "../../../services/socketio.service.js";
-// import io from 'socket.io-client'
-// import cfg from '../../../../configs/configs.json'
-// import axios from "axios";
-// io('http://localhost:3000')
 
 export default {
   name: "LoginPanel",
@@ -65,6 +65,16 @@ export default {
     };
   },
   methods: {
+    handleLogout() {
+      const username = localStorage.getItem("username");
+      localStorage.clear();
+      this.$router.push({ path: "/" });
+
+      SocketioService.disconnect();
+
+      this.makeToast("success", `Usuário ${username} deslogado com sucesso.`);
+    },
+
     handleComponent: function () {
       this.$emit("handleComponent", false);
     },
@@ -80,12 +90,11 @@ export default {
 
     addMessage() {
       const message = {
-        id: new Date().getTime(),
+        id: localStorage.getItem("userId"),
         content: this.text,
         user: localStorage.getItem("username"),
       };
-      // scrolling.scrollTop = scrolling.scrollHeight;
-      // console.log(scrolling);
+
       SocketioService.socket.emit("msgToServer", message);
     },
     makeToast(type, msg) {
@@ -151,8 +160,10 @@ export default {
 }
 
 .material-icons.md-24 {
+  padding-right: 2rem;
+  padding-left: 2rem;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   height: 5vh;
   display: flex;
   align-items: center;
@@ -219,11 +230,10 @@ export default {
   align-items: center;
   height: 3.85rem;
   display: flex;
-  border-radius: 0 15px 15px 0 !important;
+  border-radius: 0 0 15px 0;
   border-top: 0 !important;
   background-color: rgba(0, 0, 0, 0.3) !important;
-  border: 0 !important;
-  color: white !important;
+  color: #78e08f !important;
   cursor: pointer;
 }
 

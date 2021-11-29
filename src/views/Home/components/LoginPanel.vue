@@ -1,8 +1,7 @@
 <template>
   <div class="login-panel">
-    <span class="material-icons md-24">Dongo-Chat</span>
-    <p class="login-title">Faça seu Login</p>
-    <div @keydown.enter="loginIn()" id="Logininfo" class="login-info">
+    <p class="login-title">Dongo Chat</p>
+    <div @keydown.enter="handleLogin()" id="Logininfo" class="login-info">
       <input placeholder="E-mail" label="EMAIL" class="input" v-model="email" />
 
       <input
@@ -14,25 +13,28 @@
       />
     </div>
     <div class="login-submit">
-      <a v-on:click="handleComponent" class="signuplink">Fazer Cadastro</a>
       <button
         type="submit"
         label="LOGIN"
         class="button-login"
-        v-on:click="loginIn()"
+        v-on:click="handleLogin()"
         primary
       >
         Entrar
       </button>
     </div>
+    <p class="signupText">
+      Não tem conta?
+      <a v-on:click="handleComponent" class="signuplink">Fazer Cadastro</a>
+    </p>
   </div>
 </template>
 
 <script>
 import Swal from "sweetalert2";
-import cfg from '../../../../configs/configs.json'
+import cfg from "../../../../configs/configs.json";
 import axios from "axios";
-import _ from 'lodash'
+import _ from "lodash";
 export default {
   name: "LoginPanel",
   props: {
@@ -48,7 +50,7 @@ export default {
         toast: true,
         position: "top-end",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 3000,
         timerProgressBar: true,
       }),
     };
@@ -58,23 +60,33 @@ export default {
       this.$emit("handleComponent", false);
     },
 
-    loginIn: _.throttle(function() {
-      axios
+    handleLogin() {
+      this.email = this.email.trim();
+      this.password = this.password.trim();
+
+      if (this.email === "" || this.password === "") {
+        return;
+      }
+      this.loginIn();
+    },
+
+    loginIn: _.throttle(async function () {
+      await axios
         .post(cfg.baseUrl + "users/login", {
           username: this.email,
           password: this.password,
         })
         .then((response) => {
           this.makeToast("success", `Bem vindo, ${response.data.user}`);
-          localStorage.setItem("token", response.data.token)
-          localStorage.setItem( "username", response.data.user);
-          localStorage.setItem("userId", response.data.id)
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("username", response.data.user);
+          localStorage.setItem("userId", response.data.id);
           this.$router.push({ path: "/dashboard" });
         })
         .catch((err) => {
           this.makeToast("error", err.response.data.message);
         });
-    }, 2000),
+    }, 3000),
 
     makeToast(type, msg) {
       this.Toast.fire({
@@ -87,24 +99,15 @@ export default {
 </script>
 
 <style scoped>
-.material-icons.md-24 {
-  position: relative;
-  margin-top: 20px;
-  text-align: left;
-  font-size: 2px;
-  color: #ffffff;
-}
-
 .login-panel {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 30%;
   margin: 0em auto;
   position: relative;
   background-color: #ffffff;
-  top: calc(50% - 18em);
-  text-indent: 2em;
-  border-radius: 8px;
+  border-radius: 0 0 15px 15px !important;
+  border-top: 0 !important;
   animation: animate 0.5s linear forwards;
   @media screen and (max-width: 768px) {
     width: 80%;
@@ -113,13 +116,13 @@ export default {
 
 .login-panel .login-title {
   display: flex;
-  justify-content: left;
-  width: 100%;
-  padding-top: 1.5em;
-  font-size: 2em;
+  justify-content: center;
+  padding-top: 1.5rem;
+  font-size: 24px;
   line-height: 3em;
   color: #ffffff;
-  background-color: #1976d2;
+  background-color: #78e08f;
+  transition: 0.2s ease-in-out;
 
   @media screen and (max-width: 768px) {
     font-size: 1.5em;
@@ -128,50 +131,58 @@ export default {
 
 .login-panel .login-info {
   padding: 2em 2em 0 2em;
-  text-indent: 0em;
 }
 
 .login-panel .login-info .input {
-  display: flex;
   position: relative;
-  width: 50%;
+  width: 100%;
   height: 2rem;
-  overflow: visible;
-  margin-bottom: 15px;
+  margin-bottom: 1.25rem;
   transition: 0.5s;
   border: hidden;
   border-block-end-style: inset;
-  border-color: #1976d2;
+  border-color: rgba(0, 0, 0, 0.4);
   outline: none;
+  font-weight: 600;
 }
 
 .login-panel .login-info .input:focus {
   transform: scale(1.05);
+  border-color: #78e08f;
+  color: #78e08f;
 }
 .login-panel .login-submit {
-  padding: 2em;
+  padding-bottom: 1rem;
+}
+
+.signupText {
+  margin-bottom: 1rem;
+  font-size: 12px;
 }
 
 .signuplink {
-  margin-right: 10px;
-  color: #1976d2;
+  color: #78e08f;
+  font-weight: 500;
+  cursor: pointer;
 }
 
-.sender {
-  font-weight: 600;
+.signuplink:hover {
+  color: rgba(0, 0, 0, 0.4);
 }
 
 button.button-login {
-  width: 70px;
+  width: 50%;
+  height: 5vh;
   border-radius: 10px;
-  background: #1976d2;
+  border-color: #82ccdd;
+  background: #78e08f;
   color: #ffffff;
   transition: 0.1s ease-in-out;
 }
 
 button:hover {
-  transform: scale(1.2);
-  opacity: 0.8;
+  transform: scale(1.1);
+  background: #82ccdd;
 }
 
 @keyframes animate {
@@ -185,5 +196,14 @@ button:hover {
     transform: (0deg);
     filter: blur(0px);
   }
+}
+
+::placeholder {
+  text-align: center;
+  transition: 0.5s;
+}
+
+:focus::placeholder {
+  color: #78e08f;
 }
 </style>

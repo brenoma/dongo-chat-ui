@@ -1,6 +1,5 @@
 <template>
   <div id="LoginPanel" class="login-panel">
-    <span class="material-icons md-24">chat</span>
     <p class="login-title">Faça seu cadastro</p>
     <div id="Logininfo" class="login-info">
       <input
@@ -21,16 +20,16 @@
       />
     </div>
     <div class="login-submit">
-      <a v-on:click="handleComponent" class="signuplink">Voltar para Login</a>
       <button label="LOGIN" class="button-login" v-on:click="signUp()" primary>
         Cadastrar
       </button>
     </div>
+    <a v-on:click="handleComponent" class="signuplink">Voltar para Login</a>
   </div>
 </template>
 
 <script>
-import cfg from '../../../../configs/configs.json'
+import cfg from "../../../../configs/configs.json";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -63,13 +62,20 @@ export default {
           name: this.name,
           email: this.email,
           password: this.password,
-          role: 'user'
+          role: "user",
         })
         .then((response) => {
-          this.makeToast("success", `Usuário Cadastrado com sucesso: ${response.data.email}`);
+          this.makeToast(
+            "success",
+            `Usuário ${response.data.name} cadastrado com sucesso.`
+          );
+          this.handleComponent();
         })
         .catch(() => {
-          this.makeToast("error", `Não foi possível cadastrar usuário, tente novamente`);
+          this.makeToast(
+            "error",
+            `Não foi possível cadastrar usuário, tente novamente`
+          );
         });
     },
     makeToast(type, msg) {
@@ -86,24 +92,16 @@ export default {
 </script>
 
 <style scoped>
-  .material-icons.md-24 {
-  position: relative;
-  margin-top: 20px;
-  text-align: left;
-  font-size: 2px;
-  color: #ffffff;
-}
-
 .login-panel {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 30%;
   margin: 0em auto;
   position: relative;
   background-color: #ffffff;
-  top: calc(50% - 18em);
   text-indent: 2em;
-  border-radius: 8px;
+  border-radius: 0 0 15px 15px !important;
+  border-top: 0 !important;
   animation: animate 0.5s linear forwards;
   @media screen and (max-width: 768px) {
     width: 80%;
@@ -115,10 +113,11 @@ export default {
   justify-content: left;
   width: 100%;
   padding-top: 1.5em;
-  font-size: 2em;
+  font-size: 24px;
   line-height: 3em;
   color: #ffffff;
-  background-color: #1976d2;
+  background-color: #78e08f;
+  transition: 0.2s ease-in-out;
 
   @media screen and (max-width: 768px) {
     font-size: 1.5em;
@@ -133,44 +132,53 @@ export default {
 .login-panel .login-info .input {
   display: flex;
   position: relative;
-  width: 50%;
+  width: 80%;
   height: 2rem;
-  overflow: visible;
   margin-bottom: 15px;
   transition: 0.5s;
   border: hidden;
   border-block-end-style: inset;
-  border-color: #1976d2;
+  border-color: rgba(0, 0, 0, 0.4);
   outline: none;
+  font-weight: 600;
 }
 
 .login-panel .login-info .input:focus {
   transform: scale(1.05);
+  border-color: #78e08f;
+  color: #78e08f;
 }
+
 .login-panel .login-submit {
-  padding: 2em;
+  margin: 1rem;
 }
 
 .signuplink {
-  margin-right: 10px;
-  color: #1976d2;
+  margin-bottom: 1rem;
+  color: #78e08f;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
 }
 
-.sender {
-  font-weight: 600;
+.signuplink:hover {
+  color: rgba(0, 0, 0, 0.4);
 }
 
 button.button-login {
-  width: 70px;
-  border-radius: 10px;
-  background: #1976d2;
+  width: 70%;
+  height: 5vh;
+  border-radius: 0 0 7px 7px !important;
+  border-top: 0 !important;
+  border-color: #82ccdd;
+  background: #78e08f;
   color: #ffffff;
   transition: 0.1s ease-in-out;
 }
 
 button:hover {
-  transform: scale(1.2);
-  opacity: 0.8;
+  transform: scale(1.1);
+  background: #82ccdd;
 }
 
 @keyframes animate {
@@ -186,7 +194,11 @@ button:hover {
   }
 }
 
-  .signuplink { 
-    cursor: pointer;
-  }
+::placeholder {
+  transition: 0.5s;
+}
+
+:focus::placeholder {
+  color: #78e08f;
+}
 </style>
